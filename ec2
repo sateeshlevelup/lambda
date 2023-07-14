@@ -1,0 +1,28 @@
+import json
+
+import boto3
+
+def lambda_handler(event, context):
+    # Create EC2 client
+    ec2_client = boto3.client('ec2')
+
+    # Define instance parameters
+    instance_params = {
+        'ImageId': 'ami-06ca3ca175f37dd66',  # Replace with your desired AMI ID
+        'InstanceType': 't2.micro',  # Replace with your desired instance type
+         #'KeyName': 'your-key-pair',  # Replace with your desired key pair name
+        'MinCount': 1,
+        'MaxCount': 1
+    }
+
+    # Create EC2 instance
+    response = ec2_client.run_instances(**instance_params)
+
+    # Get the instance ID of the created instance
+    instance_id = response['Instances'][0]['InstanceId']
+
+    # Return the instance ID as the output
+    return {
+        'statusCode': 200,
+        'body': f"EC2 instance created with ID: {instance_id}"
+    }
